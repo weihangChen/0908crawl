@@ -3,6 +3,7 @@ using ConsoleApplication1.Service;
 using ConsoleApplication1.Builder;
 using System.IO;
 using System.Diagnostics;
+using ConsoleApplication1.Model.Booking;
 
 
 //step1
@@ -18,9 +19,11 @@ namespace ConsoleApplication1
     class Program
     {
 
-        const string hotelName = "Rozmalas";
+       
+        const string searchUrl = "http://www.booking.com/searchresults.en-gb.html";
         const string endpoint = "http://booking.com";
         const string hotelId = "1368239";
+        const string hotelName = "Rozmalas";
         const int checkin_monthday = 24;
         const int checkin_month = 9;
         const int checkin_year = 2016;
@@ -32,7 +35,7 @@ namespace ConsoleApplication1
         const int group_adults = 2;
         const int group_children = 0;
         static Stopwatch stopwatch = new Stopwatch();
-        const string searchUrl = "http://www.booking.com/searchresults.en-gb.html";
+        
 
         static void Main(string[] args)
         {
@@ -43,10 +46,12 @@ namespace ConsoleApplication1
                 IHttpService httpService = new HttpService(null, new BookingCOMRequestBuilder());
                 IBookingComService bookingComService = new BookingComService(httpService);
 
-
-                var r = bookingComService.GetHotelHTML(endpoint, searchUrl, hotelId, hotelName, checkin_monthday,
+                var paramModel = new BookingParamModel(hotelName, checkin_monthday,
                         checkin_month, checkin_year, checkout_monthday, checkout_month, checkout_year, room1, no_rooms,
-                        group_adults, group_children).Result;
+                        group_adults, group_children);
+                var metaModel = new BookingComMetaModel { hotelId = hotelId, endpoint = endpoint, searchUrl = searchUrl, ParamModel = paramModel };
+
+                var r = bookingComService.GetHotelHTMLAsync(metaModel).Result;
                 stopwatch.Stop();
                 Console.WriteLine("Time elapsed: {0:hh\\:mm\\:ss}", stopwatch.Elapsed);
                 PostProcess(r);

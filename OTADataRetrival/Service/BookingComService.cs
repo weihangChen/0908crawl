@@ -26,8 +26,7 @@ namespace ConsoleApplication1.Service
     {
         Task<string> GetBookingHTMLSearchResult(QueryModel queryModel);
 
-        Task<string> GetHotelHTML(string endpoint, string searchUrl, string hotelId, string hotelName, int checkin_monthday, int checkin_month, int checkin_year, int checkout_monthday, int checkout_month,
-            int checkout_year, string room1, int no_rooms, int group_adults, int group_children);
+        Task<string> GetHotelHTMLAsync(BookingComMetaModel metaModel);
     }
     public class BookingComService : IBookingComService
     {
@@ -45,34 +44,23 @@ namespace ConsoleApplication1.Service
             return await HttpService.HttpGetHTML(queryModel);
         }
 
+        
 
 
+        //public async Task<string> GetHotelHTML(string endpoint, string searchUrl, string hotelId, string hotelName, int checkin_monthday, int checkin_month, int checkin_year, int checkout_monthday, int checkout_month,
+        //    int checkout_year, string room1, int no_rooms, int group_adults, int group_children)
 
-
-        public async Task<string> GetHotelHTML(string endpoint, string searchUrl, string hotelId, string hotelName, int checkin_monthday, int checkin_month, int checkin_year, int checkout_monthday, int checkout_month,
-            int checkout_year, string room1, int no_rooms, int group_adults, int group_children)
+        public async Task<string> GetHotelHTMLAsync(BookingComMetaModel metaModel)
         {
-            var paramModel = new BookingParamModel(
-                    hotelName,
-                    checkin_monthday,
-                    checkin_month,
-                    checkin_year,
-                    checkout_monthday,
-                    checkout_month,
-                    checkout_year,
-                    room1,
-                    no_rooms,
-                    group_adults,
-                    group_children
-                );
+            var paramModel = metaModel.ParamModel;
 
             IRequestBuilder Builder = new BookingCOMRequestBuilder();
             var authModel = new BasicAuthenticationModel("", "");
-            var queryModel = new QueryModel(searchUrl) { AuthModel = authModel, ParamModel = paramModel };
+            var queryModel = new QueryModel(metaModel.searchUrl) { AuthModel = authModel, ParamModel = paramModel };
             var resultHTML = await GetBookingHTMLSearchResult(queryModel);
             ILinkExtractService linkExtractor = new LinkExtractService();
 
-            var url = linkExtractor.GetHotelUrl(resultHTML, hotelId, endpoint);
+            var url = linkExtractor.GetHotelUrl(resultHTML, metaModel.hotelId, metaModel.endpoint);
             url = url.Substring(0, url.IndexOf("?"));
 
             queryModel = new QueryModel(url);

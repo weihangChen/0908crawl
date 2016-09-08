@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace ConsoleApplication1.Model.Booking
 {
-    class BookingComMetaModel
+    public class BookingComMetaModel
     {
-        public BookingParamModel ParaModel { get; set; }
-        public 
+        public BookingParamModel ParamModel { get; set; }
+        public string endpoint { get; set; }
+        public string searchUrl { get; set; }
+        public string hotelId { get; set; }
+
+        
     }
 }
