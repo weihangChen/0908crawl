@@ -28,12 +28,13 @@ namespace ConsoleApplication1.Service
             var builder = new UriBuilder(queryModel.ServiceEndpoint);
             builder.Port = -1;
             var query = HttpUtility.ParseQueryString(builder.Query);
-            queryModel.ParamModel.GetPropertyNames().ForEach(x =>
-            {
-                var propertyValue = queryModel.ParamModel.GetPropertyValue(x);
-                if (propertyValue != null)
-                    query[x] = propertyValue.ToString();
-            });
+            if (queryModel.ParamModel != null)
+                queryModel.ParamModel.GetPropertyNames().ForEach(x =>
+                {
+                    var propertyValue = queryModel.ParamModel.GetPropertyValue(x);
+                    if (propertyValue != null)
+                        query[x] = propertyValue.ToString();
+                });
             builder.Query = query.ToString();
             queryModel.UrlRequest = builder.ToString();
 

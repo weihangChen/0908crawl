@@ -59,11 +59,7 @@ namespace ConsoleApplication1.Service
                 using (client = new HttpClient())
                 {
                     string url = Builder.BuildHttpClientGet(queryModel, client);
-                    url = "http://www.booking.com/searchresults.en-gb.html?ss=Rozmalas&checkin_monthday=24&checkin_month=9&checkin_year=2016&checkout_monthday=25&checkout_month=9&checkout_year=2016&room1=A,A&no_rooms=1&group_adults=2&group_children=0&dest_id=&dest_type=&ss_raw=Rozmalas";
-
-
                     HttpResponseMessage response = await client.GetAsync(url);
-
                     var content = await response.Content.ReadAsStringAsync();
                     return content;
                 }

@@ -8,7 +8,7 @@ namespace ConsoleApplication1.Builder
     {
         public string BuildHttpClientGet(QueryModel queryModel, HttpClient client)
         {
-            AppendBasicHeader(queryModel.AuthModel as BasicAuthenticationModel, client);
+            //AppendBasicHeader(queryModel.AuthModel as BasicAuthenticationModel, client);
             AppendParams(queryModel);
             return queryModel.UrlRequest;
         }
