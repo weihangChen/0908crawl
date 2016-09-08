@@ -3,6 +3,8 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using ConsoleApplication1.Service;
 using ConsoleApplication1.Model.Http;
+using System.IO;
+using System.IO.Compression;
 
 namespace ConsoleApplication1.Service
 {
@@ -33,6 +35,7 @@ namespace ConsoleApplication1.Service
                 {
                     string url = Builder.BuildHttpClientGet(queryModel, client);
                     HttpResponseMessage response = await client.GetAsync(url);
+                    response.EnsureSuccessStatusCode();
 
                     var content = await response.Content.ReadAsStringAsync();
                     obj = JsonConvert.DeserializeObject<T>(content);
@@ -60,7 +63,16 @@ namespace ConsoleApplication1.Service
                 {
                     string url = Builder.BuildHttpClientGet(queryModel, client);
                     HttpResponseMessage response = await client.GetAsync(url);
-                    var content = await response.Content.ReadAsStringAsync();
+                    response.EnsureSuccessStatusCode();
+                    //var content = await response.Content.ReadAsStringAsync();
+                    var content = "";
+                    using (var responseStream = await response.Content.ReadAsStreamAsync())
+                    using (var decompressedStream = new GZipStream(responseStream, CompressionMode.Decompress))
+                    using (var streamReader = new StreamReader(decompressedStream))
+                    {
+                        content= streamReader.ReadToEnd();
+                    }
+
                     return content;
                 }
             }
