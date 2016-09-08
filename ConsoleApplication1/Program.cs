@@ -31,6 +31,7 @@ namespace ConsoleApplication1
 
 
 
+
                 var authModel = new BasicAuthenticationModel("", "");
                 var paramModel = new LiveRateParameterModel("")
                 {
