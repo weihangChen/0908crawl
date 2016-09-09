@@ -15,7 +15,7 @@
 
     }
 
-    public abstract class ParameterModel
+    public class ParameterModel
     {
         //public string hotel_id { get; set; }
         //public string checkin { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using ConsoleApplication1.Model.Http;
 using ConsoleApplication1.Service;
+using System.Web;
 
 namespace ConsoleApplication1.Builder
 {
@@ -11,7 +12,7 @@ namespace ConsoleApplication1.Builder
             //AppendBasicHeader(queryModel.AuthModel as BasicAuthenticationModel, client);
             SimulateBrowserSetting(client);
             AppendParams(queryModel);
-            return queryModel.UrlRequest;
+            return HttpUtility.UrlDecode(queryModel.UrlRequest);
         }
 
        

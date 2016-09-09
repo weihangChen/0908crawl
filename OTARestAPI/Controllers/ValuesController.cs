@@ -18,7 +18,7 @@ namespace OTARestAPI.Controllers
             id = Guid.NewGuid().ToString();
         }
         public string id { get; set; }
-        public string data { get; set; }
+        public HotelData data { get; set; }
         public string error { get; set; }
     }
 

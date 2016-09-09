@@ -18,12 +18,19 @@ namespace ConsoleApplication1
 {
     class Program
     {
+        //        Bo Hotel 
+        // JBL Concept AB(1406)
 
-       
+        //751123
+
         const string searchUrl = "http://www.booking.com/searchresults.en-gb.html";
         const string endpoint = "http://booking.com";
-        const string hotelId = "1368239";
-        const string hotelName = "Rozmalas";
+        //const string hotelId = "1368239";
+        const string hotelName = "Bo Hotel";
+        const string hotelId = "751123";
+        //const string hotelName = "Rozmalas";
+
+
         const int checkin_monthday = 24;
         const int checkin_month = 9;
         const int checkin_year = 2016;
@@ -35,11 +42,11 @@ namespace ConsoleApplication1
         const int group_adults = 2;
         const int group_children = 0;
         static Stopwatch stopwatch = new Stopwatch();
-        
+
 
         static void Main(string[] args)
         {
-       
+
             try
             {
                 stopwatch.Start();
@@ -54,14 +61,15 @@ namespace ConsoleApplication1
                 var r = bookingComService.GetHotelHTMLAsync(metaModel).Result;
                 stopwatch.Stop();
                 Console.WriteLine("Time elapsed: {0:hh\\:mm\\:ss}", stopwatch.Elapsed);
-                PostProcess(r);
+                if (!string.IsNullOrEmpty(r.PriceData))
+                    PostProcess(r.PriceData);
 
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
-            
+
             Console.ReadLine();
         }
 

@@ -26,7 +26,9 @@ namespace ConsoleApplication1.Service
     {
         Task<string> GetBookingHTMLSearchResult(QueryModel queryModel);
 
-        Task<string> GetHotelHTMLAsync(BookingComMetaModel metaModel);
+        
+
+        Task<HotelData> GetHotelHTMLAsync(BookingComMetaModel metaModel);
     }
     public class BookingComService : IBookingComService
     {
@@ -47,11 +49,9 @@ namespace ConsoleApplication1.Service
         
 
 
-        //public async Task<string> GetHotelHTML(string endpoint, string searchUrl, string hotelId, string hotelName, int checkin_monthday, int checkin_month, int checkin_year, int checkout_monthday, int checkout_month,
-        //    int checkout_year, string room1, int no_rooms, int group_adults, int group_children)
-
-        public async Task<string> GetHotelHTMLAsync(BookingComMetaModel metaModel)
+        public async Task<HotelData> GetHotelHTMLAsync(BookingComMetaModel metaModel)
         {
+            var result = new HotelData();
             var paramModel = metaModel.ParamModel;
 
             IRequestBuilder Builder = new BookingCOMRequestBuilder();
@@ -61,19 +61,40 @@ namespace ConsoleApplication1.Service
             ILinkExtractService linkExtractor = new LinkExtractService();
 
             var url = linkExtractor.GetHotelUrl(resultHTML, metaModel.hotelId, metaModel.endpoint);
-            url = url.Substring(0, url.IndexOf("?"));
+            //if url is empty then there is another middle page
+            if (string.IsNullOrEmpty(url))
+            {
+                var middleurl = linkExtractor.GetHotelUrl1(resultHTML, metaModel.hotelId, metaModel.endpoint);
+                queryModel = new QueryModel(middleurl) { AuthModel = authModel, ParamModel = new ParameterModel() };
+                var tmpHTML = await GetBookingHTMLSearchResult(queryModel);
+                url = linkExtractor.GetHotelUrl(tmpHTML, metaModel.hotelId, metaModel.endpoint);
+            }
 
-            queryModel = new QueryModel(url);
-            queryModel.ParamModel = paramModel;
+            if (string.IsNullOrEmpty(url))
+                result.Error = "no url can be extracted";
+            else
+            {
 
-            var html = await GetBookingHTMLSearchResult(queryModel);
+                url = url.Substring(0, url.IndexOf("?"));
 
-            
-            HtmlDocument htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(html);
-            var result = htmlDoc.DocumentNode.SelectSingleNode("//div[@id='blockdisplay1']").OuterHtml;
+                queryModel = new QueryModel(url);
+                queryModel.ParamModel = paramModel;
 
-            
+                var html = await GetBookingHTMLSearchResult(queryModel);
+
+
+                HtmlDocument htmlDoc = new HtmlDocument();
+                htmlDoc.LoadHtml(html);
+                var priceNode = htmlDoc.DocumentNode.SelectSingleNode("//div[@id='blockdisplay1']");
+                if (priceNode == null)
+                {
+                    result.Msg = "We have no availability on our site for this property";
+                }
+                else
+
+                    result.PriceData = priceNode.OuterHtml;
+
+            }
 
             return result;
         }
@@ -81,7 +102,12 @@ namespace ConsoleApplication1.Service
 
     }
 
-
+    public class HotelData
+    {
+        public string PriceData { get; set; }
+        public string Msg { get; set; }
+        public string Error { get; set; }
+    }
 
 }
 
