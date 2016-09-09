@@ -66,7 +66,16 @@ namespace ConsoleApplication1.Service
             queryModel = new QueryModel(url);
             queryModel.ParamModel = paramModel;
 
-            return await GetBookingHTMLSearchResult(queryModel);
+            var html = await GetBookingHTMLSearchResult(queryModel);
+
+            
+            HtmlDocument htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(html);
+            var result = htmlDoc.DocumentNode.SelectSingleNode("//div[@id='blockdisplay1']").OuterHtml;
+
+            
+
+            return result;
         }
 
 
