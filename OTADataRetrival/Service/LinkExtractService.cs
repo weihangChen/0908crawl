@@ -6,21 +6,20 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using System.IO;
+using OTADataRetrival.Service;
 
 namespace ConsoleApplication1.Service
 {
-    public interface ILinkExtractService
+    public abstract class LinkExtractService
     {
-        string GetHotelUrl(string html, string hotelId, string endpoint);
-        string GetHotelUrl1(string html, string hotelId, string endpoint);
     }
-    public class LinkExtractService : ILinkExtractService
+    public class BookingComLinkExtractService : LinkExtractService
     {
         public string GetHotelUrl(string html, string hotelId, string endpoint)
         {
             var result = "";
-            HtmlDocument htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(html);
+            var htmlDoc = AgilityParser.GetParser(html);
+          
             var hit = false;
             foreach (HtmlNode link1 in htmlDoc.DocumentNode.SelectNodes("//a[@href]").Where(d =>
                      d.Attributes.Contains("class") && d.Attributes["class"].Value.Contains("hotel_name_link")))

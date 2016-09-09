@@ -32,10 +32,10 @@ namespace ConsoleApplication1
 
 
         const int checkin_monthday = 24;
-        const int checkin_month = 9;
+        const int checkin_month = 10;
         const int checkin_year = 2016;
         const int checkout_monthday = 25;
-        const int checkout_month = 9;
+        const int checkout_month = 10;
         const int checkout_year = 2016;
         const string room1 = "A,A";
         const int no_rooms = 1;
@@ -50,7 +50,7 @@ namespace ConsoleApplication1
             try
             {
                 stopwatch.Start();
-                IHttpService httpService = new HttpService(null, new BookingCOMRequestBuilder());
+                IHttpService httpService = new HttpService(null, new BookingComRequestBuilder());
                 IBookingComService bookingComService = new BookingComService(httpService);
 
                 var paramModel = new BookingParamModel(hotelName, checkin_monthday,

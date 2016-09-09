@@ -5,7 +5,7 @@ using System.Web;
 
 namespace ConsoleApplication1.Builder
 {
-    public class BookingCOMRequestBuilder : RequestBuilder, IRequestBuilder
+    public class BookingComRequestBuilder : RequestBuilder, IRequestBuilder
     {
         public string BuildHttpClientGet(QueryModel queryModel, HttpClient client)
         {

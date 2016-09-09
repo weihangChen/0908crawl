@@ -17,6 +17,7 @@ using ConsoleApplication1.Model.Http;
 using ConsoleApplication1.Model.Booking;
 using System.IO;
 using HtmlAgilityPack;
+using OTADataRetrival.Service;
 
 
 
@@ -54,11 +55,11 @@ namespace ConsoleApplication1.Service
             var result = new HotelData();
             var paramModel = metaModel.ParamModel;
 
-            IRequestBuilder Builder = new BookingCOMRequestBuilder();
+            IRequestBuilder Builder = new BookingComRequestBuilder();
             var authModel = new BasicAuthenticationModel("", "");
             var queryModel = new QueryModel(metaModel.searchUrl) { AuthModel = authModel, ParamModel = paramModel };
             var resultHTML = await GetBookingHTMLSearchResult(queryModel);
-            ILinkExtractService linkExtractor = new LinkExtractService();
+            var linkExtractor = new BookingComLinkExtractService();
 
             var url = linkExtractor.GetHotelUrl(resultHTML, metaModel.hotelId, metaModel.endpoint);
             //if url is empty then there is another middle page
@@ -82,9 +83,7 @@ namespace ConsoleApplication1.Service
 
                 var html = await GetBookingHTMLSearchResult(queryModel);
 
-
-                HtmlDocument htmlDoc = new HtmlDocument();
-                htmlDoc.LoadHtml(html);
+               var htmlDoc= AgilityParser.GetParser(html);
                 var priceNode = htmlDoc.DocumentNode.SelectSingleNode("//div[@id='blockdisplay1']");
                 if (priceNode == null)
                 {

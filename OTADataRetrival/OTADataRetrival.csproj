@@ -49,7 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Builder\BookingCOMRequestBuilder.cs" />
+    <Compile Include="Builder\BookingComRequestBuilder.cs" />
     <Compile Include="Extensions\ObjectReflectionExtensions.cs" />
     <Compile Include="Model\Booking\BookingComMetaModel.cs" />
     <Compile Include="Model\Booking\BookingParamModel.cs" />

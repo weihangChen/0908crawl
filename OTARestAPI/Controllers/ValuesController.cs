@@ -69,7 +69,7 @@ namespace OTARestAPI.Controllers
             var res = new ResponseEntity();
             try
             {
-                IHttpService httpService = new HttpService(null, new BookingCOMRequestBuilder());
+                IHttpService httpService = new HttpService(null, new BookingComRequestBuilder());
                 IBookingComService bookingComService = new BookingComService(httpService);
                 res.data = await bookingComService.GetHotelHTMLAsync(metaModel);
                 
